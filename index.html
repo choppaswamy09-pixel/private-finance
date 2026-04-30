@@ -465,7 +465,7 @@ We aim to reduce scams, lower broker commissions and create a transparent privat
 
 <h2>Apply For Loan</h2>
 
-<form id="loanForm" action="https://formspree.io/f/xaqpderw" method="post">
+<form id="loanForm" >
 
 <input type="text" name="Borrower Name" id="name" placeholder="Full Name" required>
 
@@ -473,9 +473,8 @@ We aim to reduce scams, lower broker commissions and create a transparent privat
 
 <input type="number" name="Loan Amount" id="amount" placeholder="Loan Amount" required>
 
-<input type="text" name="Location" id="location" placeholder="Location">
-
-<textarea id="purpose" name="Purpose" placeholder="Loan Purpose"></textarea>
+<input type="text" name="Location" id="location" placeholder="Location" required>
+<textarea id="purpose" name="Purpose" placeholder="Loan Purpose" required></textarea>
 
 <button type="submit">Submit Application</button>
 
@@ -485,25 +484,25 @@ We aim to reduce scams, lower broker commissions and create a transparent privat
 
 
 <section id="financer">
-
+ 
 <h2>Register As Financer</h2>
-
-<form id="financerForm" action="https://formspree.io/f/maqppydo" method="post">
-
-<input type="text" name="Financer Name" id="fname" placeholder="Name">
-
-<input type="tel" name="Financer Phone" id="fphone" placeholder="Phone Number">
-
-<input type="number" name="Funding Capacity" id="capacity" placeholder="Funding Capacity">
-
-<input type="text" name="Service Location" id="flocation" placeholder="Location">
-
-<input type="number" name="Interest Rate" id="interest" placeholder="Interest Rate">
-
+ 
+<form id="financerForm">
+ 
+<input type="text" name="Financer Name" id="fname" placeholder="Name" required>
+ 
+<input type="tel" name="Financer Phone" id="fphone" placeholder="Phone Number" required>
+ 
+<input type="number" name="Funding Capacity" id="capacity" placeholder="Funding Capacity" required>
+ 
+<input type="text" name="Service Location" id="flocation" placeholder="Location" required>
+ 
+<input type="number" name="Interest Rate" id="interest" placeholder="Interest Rate" required>
+ 
 <button type="submit">Register</button>
-
+ 
 </form>
-
+ 
 </section>
 
 
@@ -576,129 +575,64 @@ Our goal is to reduce broker commissions by connecting borrowers and financers d
 
 <script>
 
+const YOUR_WHATSAPP = "916281299866"; // నీ number ఇది సరైనదే
+
 function scrollToLoan(){
-document.getElementById("loan").scrollIntoView({behavior: 'smooth'});
+  document.getElementById("loan").scrollIntoView({behavior: 'smooth'});
 }
 
 function scrollToFinancer(){
-document.getElementById("financer").scrollIntoView({behavior: 'smooth'});
+  document.getElementById("financer").scrollIntoView({behavior: 'smooth'});
 }
 
-/* Loan Form Validation */
-
-document.getElementById("loanForm").addEventListener("submit",function(e){
-
-e.preventDefault();
-
-let name = document.getElementById("name").value.trim();
-let phone = document.getElementById("phone").value.trim();
-let amount = document.getElementById("amount").value.trim();
-let location = document.getElementById("location").value.trim();
-let purpose = document.getElementById("purpose").value.trim();
-
-let phonePattern = /^[0-9]{10}$/;
-
-if(name === "" || phone === "" || amount === "" || location === "" || purpose === ""){
-alert("Please fill all boxes");
-return;
-}
-
-if(!phonePattern.test(phone)){
-alert("Please enter a valid 10 digit phone number");
-return;
-}
-
-if(amount <= 0){
-alert("Please enter valid loan amount");
-return;
-}
-
-let form = e.target;
-  let data = new FormData(form);
-
-  fetch(form.action, {
-    method: 'POST',
-    body: data,
-    headers: { 'Accept': 'application/json' }
-  }).then(response => {
-    if (response.ok) {
-      alert("Loan Application Submitted Successfully! We Will Connect With You Shortily");
-      form.reset();
-    } else {
-      alert("Oops! Something went wrong. Please try again.");
-    }
-  });
+document.getElementById("loanForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  let name     = document.getElementById("name").value.trim();
+  let phone    = document.getElementById("phone").value.trim();
+  let amount   = document.getElementById("amount").value.trim();
+  let location = document.getElementById("location").value.trim();
+  let purpose  = document.getElementById("purpose").value.trim();
+  let phonePattern = /^[0-9]{10}$/;
+  if(name===""||phone===""||amount===""||location===""||purpose===""){alert("Please fill all boxes");return;}
+  if(!phonePattern.test(phone)){alert("Please enter a valid 10 digit phone number");return;}
+  if(amount<=0){alert("Please enter valid loan amount");return;}
+  let message = `🏦 *NEW LOAN APPLICATION*\n---------------------------\n👤 Name     : ${name}\n📞 Phone    : ${phone}\n💰 Amount   : ₹${amount}\n📍 Location : ${location}\n📝 Purpose  : ${purpose}\n---------------------------\n_Sent from Private Finance Website_`;
+  let encodedMsg = encodeURIComponent(message);
+  window.open(`https://wa.me/${YOUR_WHATSAPP}?text=${encodedMsg}`, '_blank');
+  e.target.reset();
 });
 
-
-/* Financer Form Validation */
-
-document.getElementById("financerForm").addEventListener("submit",function(e){
-
-e.preventDefault();
-
-let fname = document.getElementById("fname").value.trim();
-let fphone = document.getElementById("fphone").value.trim();
-let capacity = document.getElementById("capacity").value.trim();
-let flocation = document.getElementById("flocation").value.trim();
-let interest = document.getElementById("interest").value.trim();
-
-let phonePattern = /^[0-9]{10}$/;
-
-if(fname === "" || fphone === "" || capacity === "" || flocation === "" || interest === ""){
-alert("Please fill all boxes");
-return;
-}
-
-if(!phonePattern.test(fphone)){
-alert("Please enter valid 10 digit phone number");
-return;
-}
-
-if(capacity <= 0){
-alert("Please enter valid funding capacity");
-return;
-}
-
-let form = e.target;
-  let data = new FormData(form);
-
-  fetch(form.action, {
-    method: 'POST',
-    body: data,
-    headers: { 'Accept': 'application/json' }
-  }).then(response => {
-    if (response.ok) {
-      alert("Financer Registered Successfully! We will Connect With You Shortily");
-      form.reset();
-    } else {
-      alert("Oops! Something went wrong.");
-    }
-  });
+document.getElementById("financerForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  let fname     = document.getElementById("fname").value.trim();
+  let fphone    = document.getElementById("fphone").value.trim();
+  let capacity  = document.getElementById("capacity").value.trim();
+  let flocation = document.getElementById("flocation").value.trim();
+  let interest  = document.getElementById("interest").value.trim();
+  let phonePattern = /^[0-9]{10}$/;
+  if(fname===""||fphone===""||capacity===""||flocation===""||interest===""){alert("Please fill all boxes");return;}
+  if(!phonePattern.test(fphone)){alert("Please enter valid 10 digit phone number");return;}
+  if(capacity<=0){alert("Please enter valid funding capacity");return;}
+  let message = `💼 *NEW FINANCER REGISTRATION*\n---------------------------\n👤 Name      : ${fname}\n📞 Phone     : ${fphone}\n💰 Capacity  : ₹${capacity}\n📍 Location  : ${flocation}\n📊 Interest  : ${interest}%\n---------------------------\n_Sent from Private Finance Website_`;
+  let encodedMsg = encodeURIComponent(message);
+  window.open(`https://wa.me/${YOUR_WHATSAPP}?text=${encodedMsg}`, '_blank');
+  e.target.reset();
 });
-
-
-/* FAQ */
 
 let faqs = document.querySelectorAll(".faq-question");
-
-faqs.forEach(function(q){
-
-q.addEventListener("click",function(){
-
-let answer = this.nextElementSibling;
-let arrow = this.querySelector(".arrow");
-
-if(answer.style.display === "block"){
-answer.style.display="none";
-arrow.style.transform="rotate(0deg)";
-}else{
-answer.style.display="block";
-arrow.style.transform="rotate(180deg)";
-}
-
-});
-
+faqs.forEach(function(q) {
+  q.addEventListener("click", function() {
+    faqs.forEach(function(otherQ) {
+      if(otherQ !== q) {
+        otherQ.nextElementSibling.style.display = "none";
+        otherQ.querySelector(".arrow").style.transform = "rotate(0deg)";
+      }
+    });
+    let answer = this.nextElementSibling;
+    let arrow  = this.querySelector(".arrow");
+    if(answer.style.display==="block"){answer.style.display="none";arrow.style.transform="rotate(0deg)";}
+    else{answer.style.display="block";arrow.style.transform="rotate(180deg)";}
+  });
 });
 
 </script>
